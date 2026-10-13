@@ -1,0 +1,1150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Safe - Crowd Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f1f6fc;
+            color: #102e59;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #103866, #082344);
+            color: white;
+            padding: 22px 12px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            padding: 0 12px 30px;
+        }
+
+        .logo span {
+            color: #12a7ff;
+        }
+
+        .logo small {
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #0879ed;
+        }
+
+        .nav-icon {
+            width: 24px;
+            text-align: center;
+            font-size: 19px;
+        }
+
+        .nav .notification-count {
+            margin-left: auto;
+            background: #ff444b;
+            padding: 3px 7px;
+            border-radius: 50%;
+            font-size: 11px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px 5px 10px;
+            color: #d6e7fb;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 78px;
+            background: #123d70;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 15px 28px;
+            color: white;
+        }
+
+        .search {
+            flex: 1;
+            max-width: 720px;
+            display: flex;
+            align-items: center;
+            background: #32659f;
+            border-radius: 30px;
+            padding: 13px 20px;
+            gap: 12px;
+        }
+
+        .search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search input::placeholder {
+            color: #e1edfc;
+        }
+
+        .top-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .avatar {
+            width: 43px;
+            height: 43px;
+            background: #d8e8ff;
+            color: #12477f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Dashboard layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.9fr) minmax(250px, 0.95fr);
+            gap: 14px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #d5e5fa;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 3px 12px rgba(25, 77, 130, 0.04);
+        }
+
+        /* Welcome banner */
+        .hero {
+            grid-column: 1 / 3;
+            min-height: 355px;
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(90deg, #ffffff 0%, #ffffff 28%,
+                rgba(255,255,255,0.91) 43%,
+                rgba(255,255,255,0.05) 100%),
+                url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1400&q=85")
+                center/cover;
+            border: 1px solid #d5e5fa;
+            border-radius: 12px;
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #214d83;
+        }
+
+        .hero h1 {
+            font-size: 43px;
+            margin: 8px 0;
+            color: #12375f;
+        }
+
+        .hero h1 span {
+            color: #0878f9;
+        }
+
+        .hero h2 {
+            font-size: 20px;
+            font-weight: normal;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            max-width: 260px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Statistics */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid #d6e6fa;
+            border-radius: 9px;
+            padding: 12px 10px;
+            flex: 1;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: white;
+            font-size: 19px;
+            margin: 0 auto 8px;
+        }
+
+        .blue { background: #087cf0; }
+        .green { background: #16ad72; }
+        .orange { background: #ffb51b; }
+        .red { background: #fa464d; }
+
+        .stat h3 {
+            font-size: 23px;
+            margin-bottom: 5px;
+        }
+
+        .stat p {
+            font-size: 12px;
+        }
+
+        /* Quick actions */
+        .welcome-panel {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        .welcome-panel h3 {
+            font-size: 19px;
+            margin-bottom: 6px;
+        }
+
+        .muted {
+            color: #5d7ca4;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .primary-action {
+            width: 100%;
+            margin: 15px 0;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(110deg, #0782f7, #1768d4);
+            color: white;
+            padding: 17px 13px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            font-size: 30px;
+        }
+
+        .primary-action strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .primary-action small {
+            line-height: 1.5;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .quick-card {
+            padding: 14px;
+            border: 1px solid #d2e3fa;
+            border-radius: 10px;
+            min-height: 115px;
+            color: #123765;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .quick-card:hover {
+            border-color: #1482f4;
+            background: #f5faff;
+        }
+
+        .quick-card .action-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9f2ff;
+            border-radius: 10px;
+            padding: 6px 10px;
+            margin-bottom: 8px;
+        }
+
+        .quick-card h4 {
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .quick-card p {
+            color: #6280a8;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Section headings */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h3 {
+            font-size: 15px;
+        }
+
+        .section-heading a {
+            color: #0877ee;
+            font-size: 12px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* Map */
+        .map-panel {
+            grid-column: 1;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            font-size: 10px;
+            color: #607c9f;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .map {
+            height: 330px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background:
+                linear-gradient(28deg, transparent 46%, #eabf64 47%, #eabf64 48%, transparent 49%),
+                linear-gradient(115deg, transparent 37%, #68bf9b 38%, #68bf9b 39%, transparent 40%),
+                linear-gradient(160deg, transparent 55%, #eabf64 56%, #eabf64 57%, transparent 58%),
+                repeating-linear-gradient(0deg, transparent 0 35px, #dce7df 36px 38px),
+                repeating-linear-gradient(90deg, #f2f4ed 0 40px, #dce7df 41px 43px);
+            border: 1px solid #e0e9dd;
+        }
+
+        .map::before,
+        .map::after {
+            content: "";
+            position: absolute;
+            height: 5px;
+            width: 150%;
+            left: -20%;
+            top: 45%;
+            background: #6ac39b;
+            border: 2px solid white;
+            transform: rotate(-22deg);
+        }
+
+        .map::after {
+            top: 60%;
+            transform: rotate(17deg);
+            background: #f5b94f;
+        }
+
+        .map-label {
+            position: absolute;
+            z-index: 2;
+            font-weight: bold;
+            color: #35557b;
+            background: rgba(255,255,255,0.75);
+            padding: 4px 7px;
+            border-radius: 5px;
+        }
+
+        .map-pin {
+            position: absolute;
+            z-index: 3;
+            width: 25px;
+            height: 25px;
+            background: #fa454b;
+            border: 3px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 6px #8b9eb3;
+        }
+
+        .map-pin.blue-pin {
+            background: #087cf0;
+            width: 29px;
+            height: 29px;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 4;
+            display: grid;
+            background: white;
+            border-radius: 7px;
+            box-shadow: 0 2px 8px #aab9c7;
+        }
+
+        .map-controls button {
+            border: none;
+            background: white;
+            padding: 7px 12px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Recent reports */
+        .reports-panel {
+            grid-column: 2;
+            grid-row: 2 / 4;
+        }
+
+        .report {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid #edf2f8;
+        }
+
+        .report:last-child {
+            border-bottom: none;
+        }
+
+        .report-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 9px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #c4dfd5, #6f9b82);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .report-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .report-info h4 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .report-info p {
+            color: #6d86a5;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 7px;
+            border-radius: 7px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .status.progress {
+            background: #fff0c9;
+            color: #9c6400;
+        }
+
+        .status.resolved {
+            background: #d8f7e9;
+            color: #078858;
+        }
+
+        .status.pending {
+            background: #ffedce;
+            color: #9d6000;
+        }
+
+        /* Traffic status */
+        .traffic-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 12px;
+            border: 1px solid #edf2f8;
+            border-radius: 9px;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .traffic-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .smooth { color: #10a66b; }
+        .moderate { color: #efa90b; }
+        .heavy { color: #f04449; }
+
+        /* Safety alert */
+        .alert-panel {
+            background: linear-gradient(115deg, #e8f3ff, #f5f9ff);
+            border: 1px solid #cfe2fb;
+        }
+
+        .alert-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .alert-symbol {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1683f5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .alert-title h3 {
+            color: #0866cf;
+            font-size: 16px;
+        }
+
+        .alert-panel p {
+            color: #52749d;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .alert-link {
+            display: block;
+            margin-top: 14px;
+            text-align: right;
+            color: #0877ee;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Safety benefits */
+        .benefits {
+            grid-column: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 20px 8px;
+        }
+
+        .benefit {
+            text-align: center;
+            padding: 5px;
+            border-right: 1px solid #d7e5f7;
+        }
+
+        .benefit:last-child {
+            border-right: none;
+        }
+
+        .benefit .symbol {
+            font-size: 23px;
+            margin-bottom: 8px;
+            color: #24568d;
+        }
+
+        .benefit h4 {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .benefit p {
+            color: #6a86a8;
+            font-size: 10px;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 1250px) {
+            .dashboard-grid {
+                grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
+            }
+
+            .hero {
+                grid-column: 1 / -1;
+            }
+
+            .welcome-panel {
+                grid-column: 1 / -1;
+                grid-row: auto;
+            }
+
+            .map-panel {
+                grid-column: 1;
+            }
+
+            .reports-panel {
+                grid-column: 2;
+                grid-row: auto;
+            }
+
+            .benefits {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                width: 75px;
+                padding: 15px 8px;
+            }
+
+            .logo {
+                font-size: 0;
+                padding: 8px 0 25px;
+                text-align: center;
+            }
+
+            .logo::before {
+                content: "DS";
+                font-size: 23px;
+            }
+
+            .logo small,
+            .nav .nav-text,
+            .sidebar-footer {
+                display: none;
+            }
+
+            .nav a {
+                justify-content: center;
+                padding: 14px 5px;
+            }
+
+            .nav-icon {
+                font-size: 21px;
+            }
+
+            .nav .notification-count {
+                position: absolute;
+                margin: -28px 0 0 28px;
+            }
+
+            .topbar {
+                padding: 12px;
+            }
+
+            .top-profile .user-details {
+                display: none;
+            }
+
+            .content {
+                padding: 12px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero,
+            .welcome-panel,
+            .map-panel,
+            .reports-panel,
+            .benefits {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .hero {
+                min-height: 380px;
+            }
+
+            .benefits {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar {
+                height: auto;
+                flex-wrap: wrap;
+            }
+
+            .search {
+                flex-basis: 100%;
+                order: 2;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .map-legend {
+                margin-top: 8px;
+            }
+
+            .section-heading {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            ◈ Drive <span>Safe</span>
+            <small>Crowd Management System</small>
+        </div>
+
+        <nav class="nav">
+            <a href="#home" class="active">
+                <span class="nav-icon">⌂</span>
+                <span class="nav-text">Home</span>
+            </a>
+
+            <a href="#report">
+                <span class="nav-icon">▧</span>
+                <span class="nav-text">Report a Problem</span>
+            </a>
+
+            <a href="#accident">
+                <span class="nav-icon">☎</span>
+                <span class="nav-text">Accident Support</span>
+            </a>
+
+            <a href="#license">
+                <span class="nav-icon">▤</span>
+                <span class="nav-text">License Services</span>
+            </a>
+
+            <a href="#reports">
+                <span class="nav-icon">▣</span>
+                <span class="nav-text">My Reports</span>
+            </a>
+
+            <a href="#notifications">
+                <span class="nav-icon">♧</span>
+                <span class="nav-text">Notifications</span>
+                <span class="notification-count">3</span>
+            </a>
+
+            <a href="#profile">
+                <span class="nav-icon">♙</span>
+                <span class="nav-text">Profile</span>
+            </a>
+
+            <a href="#settings">
+                <span class="nav-icon">⚙</span>
+                <span class="nav-text">Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div style="font-size:48px;">♧</div>
+            <strong>Safer Roads</strong><br>
+            Stronger Communities
+        </div>
+    </aside>
+
+    <!-- Main dashboard -->
+    <main class="main" id="home">
+
+        <!-- Top bar -->
+        <header class="topbar">
+            <div class="search">
+                <span style="font-size:22px;">⌕</span>
+                <input type="search"
+                       placeholder="Search location, report, or service...">
+            </div>
+
+            <div style="font-size:25px; position:relative;">
+                ♧
+                <span style="position:absolute;top:-5px;right:-8px;
+                background:#ff454b;color:white;font-size:10px;
+                border-radius:50%;padding:4px 6px;">3</span>
+            </div>
+
+            <div class="top-profile" id="profile">
+                <div class="avatar">PP</div>
+                <div class="user-details">
+                    <strong>Pratiksha Popkar</strong>
+                    <div style="margin-top:4px;color:#d1e5ff;">Citizen</div>
+                </div>
+                <span>⌄</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="dashboard-grid">
+
+                <!-- Welcome banner and statistics -->
+                <section class="hero">
+                    <div>
+                        <div class="eyebrow">WELCOME TO</div>
+                        <h1>Drive <span>Safe</span></h1>
+                        <h2>Crowd Management System</h2>
+                        <p>
+                            Report issues, get help, and make our roads
+                            safer together.
+                        </p>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-icon blue">♟</div>
+                            <h3>1256</h3>
+                            <p>Total Reports</p>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-icon green">✓</div>
+                            <h3>892</h3>
+                            <p>Resolved</p>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-icon orange">◷</div>
+                            <h3>243</h3>
+                            <p>In Progress</p>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-icon red">⚠</div>
+                            <h3>121</h3>
+                            <p>High Priority</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick actions -->
+                <section class="panel welcome-panel">
+                    <h3>Hello, Pratiksha!</h3>
+                    <p class="muted">
+                        Together we can make roads safer.
+                    </p>
+
+                    <a href="#report" class="primary-action">
+                        <span class="action-icon">📷</span>
+                        <span>
+                            <strong>Report a Problem</strong>
+                            <small>Road, pipeline, gutter, accident etc.</small>
+                        </span>
+                    </a>
+
+                    <div class="quick-grid">
+                        <a href="#accident" class="quick-card">
+                            <div class="action-icon">🆘</div>
+                            <h4>Accident Support</h4>
+                            <p>Emergency help, medical support</p>
+                        </a>
+
+                        <a href="#license" class="quick-card">
+                            <div class="action-icon">▣</div>
+                            <h4>License Services</h4>
+                            <p>Apply, renew and check license</p>
+                        </a>
+
+                        <a href="#reports" class="quick-card">
+                            <div class="action-icon">▤</div>
+                            <h4>View Reports</h4>
+                            <p>Track your submitted reports</p>
+                        </a>
+
+                        <a href="#settings" class="quick-card">
+                            <div class="action-icon">•••</div>
+                            <h4>Other Services</h4>
+                            <p>More services coming soon</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Traffic map -->
+                <section class="panel map-panel">
+                    <div class="section-heading">
+                        <h3>📍 Live Traffic &amp; Incidents</h3>
+
+                        <div class="map-legend">
+                            <span><i class="dot" style="background:#19ae72;"></i>Smooth</span>
+                            <span><i class="dot" style="background:#ffb91d;"></i>Moderate</span>
+                            <span><i class="dot" style="background:#f14349;"></i>Heavy</span>
+                            <span><i class="dot" style="background:#f14349;"></i>Incident</span>
+                        </div>
+                    </div>
+
+                    <div class="map">
+                        <div class="map-controls">
+                            <button type="button" aria-label="Zoom in">+</button>
+                            <button type="button" aria-label="Zoom out">−</button>
+                        </div>
+
+                        <span class="map-label" style="top:18%;left:62%;">
+                            GANESHKHIND
+                        </span>
+
+                        <span class="map-label" style="top:47%;left:36%;">
+                            Shivaji Nagar
+                        </span>
+
+                        <span class="map-label" style="top:49%;left:58%;
+                        font-size:20px;">Pune</span>
+
+                        <span class="map-label" style="bottom:18%;left:15%;">
+                            KOTHRUD
+                        </span>
+
+                        <span class="map-label" style="bottom:15%;right:12%;">
+                            HADAPSAR
+                        </span>
+
+                        <span class="map-pin" style="top:20%;left:30%;"></span>
+                        <span class="map-pin" style="top:37%;right:19%;"></span>
+                        <span class="map-pin" style="bottom:20%;left:62%;"></span>
+                        <span class="map-pin blue-pin" style="top:54%;left:50%;"></span>
+                    </div>
+                </section>
+
+                <!-- Recent reports -->
+                <section class="panel reports-panel" id="reports">
+                    <div class="section-heading">
+                        <h3>Recent Reports</h3>
+                        <a href="#reports">View All →</a>
+                    </div>
+
+                    <div class="report">
+                        <div class="report-thumb">🛣️</div>
+                        <div class="report-info">
+                            <h4>Broken Road</h4>
+                            <p>Shivaji Nagar, Pune</p>
+                            <p>2 days ago</p>
+                        </div>
+                        <span class="status progress">In Progress</span>
+                    </div>
+
+                    <div class="report">
+                        <div class="report-thumb">💧</div>
+                        <div class="report-info">
+                            <h4>Water Pipeline Leak</h4>
+                            <p>MG Road, Pune</p>
+                            <p>3 days ago</p>
+                        </div>
+                        <span class="status resolved">Resolved</span>
+                    </div>
+
+                    <div class="report">
+                        <div class="report-thumb">🚦</div>
+                        <div class="report-info">
+                            <h4>Traffic Signal Issue</h4>
+                            <p>Koregaon Park, Pune</p>
+                            <p>5 days ago</p>
+                        </div>
+                        <span class="status pending">Pending</span>
+                    </div>
+
+                    <div class="report">
+                        <div class="report-thumb">🚧</div>
+                        <div class="report-info">
+                            <h4>Gutter Blockage</h4>
+                            <p>Kalyani Nagar, Pune</p>
+                            <p>5 days ago</p>
+                        </div>
+                        <span class="status progress">In Progress</span>
+                    </div>
+
+                    <div class="report">
+                        <div class="report-thumb">🚗</div>
+                        <div class="report-info">
+                            <h4>Accident Report</h4>
+                            <p>Bund Garden, Pune</p>
+                            <p>6 days ago</p>
+                        </div>
+                        <span class="status resolved">Resolved</span>
+                    </div>
+                </section>
+
+                <!-- Traffic status -->
+                <section class="panel">
+                    <div class="section-heading">
+                        <h3>▥ Live Traffic Status</h3>
+                        <a href="#traffic">View Details</a>
+                    </div>
+
+                    <div class="traffic-row">
+                        <strong>Main Roads</strong>
+                        <span class="traffic-status smooth">
+                            <i class="dot" style="background:#19ae72;"></i>
+                            Smooth
+                        </span>
+                    </div>
+
+                    <div class="traffic-row">
+                        <strong>City Center</strong>
+                        <span class="traffic-status moderate">
+                            <i class="dot" style="background:#ffb91d;"></i>
+                            Moderate
+                        </span>
+                    </div>
+
+                    <div class="traffic-row">
+                        <strong>Outer Ring Road</strong>
+                        <span class="traffic-status heavy">
+                            <i class="dot" style="background:#f14349;"></i>
+                            Heavy
+                        </span>
+                    </div>
+
+                    <div class="traffic-row">
+                        <strong>Highways</strong>
+                        <span class="traffic-status smooth">
+                            <i class="dot" style="background:#19ae72;"></i>
+                            Smooth
+                        </span>
+                    </div>
+                </section>
+
+                <!-- Safety benefits -->
+                <section class="panel benefits">
+                    <div class="benefit">
+                        <div class="symbol">⬟</div>
+                        <h4>Your Safety</h4>
+                        <p>Our Priority</p>
+                    </div>
+
+                    <div class="benefit">
+                        <div class="symbol">📍</div>
+                        <h4>Real-time Updates</h4>
+                        <p>Stay Informed</p>
+                    </div>
+
+                    <div class="benefit">
+                        <div class="symbol">♟</div>
+                        <h4>Community Support</h4>
+                        <p>Stronger Together</p>
+                    </div>
+
+                    <div class="benefit">
+                        <div class="symbol">⬟</div>
+                        <h4>Better Infrastructure</h4>
+                        <p>For a Safer Tomorrow</p>
+                    </div>
+                </section>
+
+                <!-- Safety alert -->
+                <section class="panel alert-panel" id="notifications">
+                    <div class="alert-title">
+                        <div class="alert-symbol">⚑</div>
+                        <h3>Safety Alert</h3>
+                    </div>
+
+                    <p>
+                        Heavy traffic at FC Road due to road maintenance.
+                        Avoid the area and use alternative routes.
+                    </p>
+
+                    <a href="#traffic" class="alert-link">
+                        View Details →
+                    </a>
+                </section>
+
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
